@@ -14,8 +14,8 @@
 }
 
 body {
-  background: #050505;
-  color: white;
+  background: #fff5fa;
+  color: #333;
   min-height: 100vh;
 }
 
@@ -32,22 +32,26 @@ button {
   justify-content: center;
   align-items: center;
   padding: 25px;
-  background:
-    radial-gradient(circle, #350000, #100000 40%, #050505 75%);
+  background: radial-gradient(
+    circle,
+    #ffc1dc,
+    #ffe6f1 45%,
+    #ffffff 85%
+  );
 }
 
 .logo {
   font-size: 48px;
   font-weight: 900;
   letter-spacing: 7px;
-  color: #ff2020;
-  text-shadow: 0 0 15px red;
+  color: #ff1493;
+  text-shadow: 0 0 15px #ffb6d5;
   margin-bottom: 12px;
   text-align: center;
 }
 
 .subtitle {
-  color: #aaa;
+  color: #9c5275;
   letter-spacing: 3px;
   margin-bottom: 35px;
   text-align: center;
@@ -61,28 +65,39 @@ button {
 .roomBox input {
   width: 100%;
   padding: 16px;
-  background: #111;
-  color: white;
-  border: 1px solid #700000;
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #ff8fc4;
   border-radius: 10px;
   outline: none;
   font-size: 16px;
   margin-bottom: 10px;
 }
 
+.roomBox input:focus,
+.textInput:focus {
+  border-color: #ff1493;
+  box-shadow: 0 0 8px #ffc1dc;
+}
+
 .enter {
   width: 100%;
   padding: 15px;
-  background: #d00000;
+  background: #ff69b4;
   color: white;
   border: 0;
   border-radius: 10px;
   font-size: 17px;
   font-weight: bold;
+  transition: 0.2s;
+}
+
+.enter:hover {
+  background: #ff1493;
 }
 
 #error {
-  color: #ff3333;
+  color: #e60073;
   margin-top: 15px;
   display: none;
   text-align: center;
@@ -92,15 +107,16 @@ button {
 
 #chat {
   display: none;
+  height: 100vh;
   height: 100dvh;
   flex-direction: column;
-  background: #070707;
+  background: #fff5fa;
 }
 
 .header {
   padding: 15px;
-  background: #120000;
-  border-bottom: 1px solid #700000;
+  background: #ffe0ed;
+  border-bottom: 1px solid #ff9fc9;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -108,7 +124,7 @@ button {
 }
 
 .title {
-  color: #ff2020;
+  color: #ff1493;
   font-weight: bold;
   letter-spacing: 2px;
   overflow-wrap: anywhere;
@@ -116,34 +132,42 @@ button {
 
 .exit {
   flex-shrink: 0;
-  background: #111;
-  color: white;
-  border: 1px solid #700000;
+  background: #ffffff;
+  color: #e60073;
+  border: 1px solid #ff8fc4;
   padding: 8px 12px;
   border-radius: 7px;
+}
+
+.exit:hover {
+  background: #ffd6e8;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
   padding: 15px;
+  overscroll-behavior: contain;
 }
 
 .message {
   max-width: 85%;
-  background: #181818;
-  border-left: 3px solid #d00000;
+  background: #ffffff;
+  color: #333;
+  border-left: 3px solid #ff69b4;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 12px;
   overflow-wrap: anywhere;
+  box-shadow: 0 2px 8px #ffc1dc;
 }
 
 .message.me {
   margin-left: auto;
-  background: #350000;
+  background: #ffd6e8;
+  color: #4a1830;
   border-left: 0;
-  border-right: 3px solid red;
+  border-right: 3px solid #ff1493;
 }
 
 .message img {
@@ -165,26 +189,30 @@ button {
 }
 
 .msgActions button {
-  background: #111;
-  color: #ddd;
-  border: 1px solid #600000;
+  background: #fff0f7;
+  color: #c21868;
+  border: 1px solid #ffadd2;
   padding: 5px 8px;
   border-radius: 5px;
   font-size: 11px;
 }
 
+.msgActions button:hover {
+  background: #ffd6e8;
+}
+
 .time {
-  color: #999;
+  color: #a16c86;
   font-size: 10px;
   margin-top: 5px;
 }
 
-/* INPUT */
+/* INPUT AREA */
 
 .inputArea {
   padding: 10px;
-  background: #100000;
-  border-top: 1px solid #700000;
+  background: #ffe0ed;
+  border-top: 1px solid #ff9fc9;
 }
 
 .inputRow {
@@ -198,10 +226,14 @@ button {
   min-width: 0;
   padding: 13px;
   border-radius: 9px;
-  border: 1px solid #500000;
-  background: #151515;
-  color: white;
+  border: 1px solid #ffadd2;
+  background: #ffffff;
+  color: #333;
   outline: none;
+}
+
+.textInput::placeholder {
+  color: #b58a9e;
 }
 
 .iconBtn {
@@ -210,17 +242,36 @@ button {
   height: 43px;
   border: 0;
   border-radius: 9px;
-  background: #a00000;
+  background: #ff85bd;
   color: white;
   font-size: 19px;
+  transition: 0.2s;
+}
+
+.iconBtn:hover {
+  background: #ff1493;
 }
 
 .send {
-  background: #e00000;
+  background: #ff1493;
+}
+
+.send:hover {
+  background: #d60076;
 }
 
 .recording {
-  background: #ff0000 !important;
+  background: #e60073 !important;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* CAMERA */
@@ -228,14 +279,17 @@ button {
 #cameraBox {
   display: none;
   padding: 10px;
-  background: #111;
+  background: #fff0f7;
   text-align: center;
+  border-bottom: 1px solid #ffadd2;
 }
 
 #cameraPreview {
   width: 100%;
   max-width: 350px;
+  max-height: 300px;
   border-radius: 10px;
+  background: #fff;
 }
 
 .cameraButtons {
@@ -249,9 +303,26 @@ button {
   padding: 9px 14px;
   border: 0;
   border-radius: 7px;
-  background: #d00000;
+  background: #ff69b4;
   color: white;
 }
+
+.cameraButtons button:hover {
+  background: #ff1493;
+}
+
+/* SCROLLBAR */
+
+.messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: #ffadd2;
+  border-radius: 10px;
+}
+
+/* MOBILE */
 
 @media (max-width: 500px) {
   .logo {
@@ -275,6 +346,10 @@ button {
 
   .textInput {
     padding: 11px 8px;
+  }
+
+  .header {
+    padding: 12px;
   }
 }
 </style>
@@ -320,7 +395,7 @@ button {
   <header class="header">
 
     <div class="title">
-      🔴 ROOM: <span id="roomName"></span>
+      💗 ROOM: <span id="roomName"></span>
     </div>
 
     <button class="exit" id="exitButton">
@@ -429,14 +504,13 @@ import {
   push,
   set,
   onChildAdded,
+  onChildRemoved,
   query,
   limitToLast
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
 
-/* =================================
-   FIREBASE CONFIG
-================================= */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
   apiKey: "AIzaSyC0KoOuycs7ny_L7Ec3Nmia3qZ1Ix9phL0",
@@ -449,17 +523,13 @@ const firebaseConfig = {
 };
 
 
-/* =================================
-   INITIALIZE FIREBASE
-================================= */
+/* INITIALIZE FIREBASE */
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-/* =================================
-   ELEMENTS
-================================= */
+/* ELEMENTS */
 
 const home = document.getElementById("home");
 const chat = document.getElementById("chat");
@@ -475,13 +545,12 @@ const cameraPreview = document.getElementById("cameraPreview");
 const voiceButton = document.getElementById("voiceButton");
 
 
-/* =================================
-   STATE
-================================= */
+/* STATE */
 
 let currentRoom = "";
 let messagesRef = null;
 let unsubscribe = null;
+let unsubscribeRemoved = null;
 
 let cameraStream = null;
 let mediaRecorder = null;
@@ -490,17 +559,18 @@ let audioChunks = [];
 let isJoining = false;
 
 
-/* =================================
-   DEVICE ID
-================================= */
+/* DEVICE ID */
 
 function getDeviceId() {
 
   let id = localStorage.getItem("akatsukiDeviceId");
 
   if (!id) {
+
     id = crypto.randomUUID();
+
     localStorage.setItem("akatsukiDeviceId", id);
+
   }
 
   return id;
@@ -509,17 +579,19 @@ function getDeviceId() {
 const myId = getDeviceId();
 
 
-/* =================================
-   HELPERS
-================================= */
+/* HELPERS */
 
 function showError(message) {
+
   errorBox.textContent = message;
   errorBox.style.display = "block";
+
 }
 
 function hideError() {
+
   errorBox.style.display = "none";
+
 }
 
 function formatTime(timestamp) {
@@ -529,16 +601,17 @@ function formatTime(timestamp) {
       hour: "2-digit",
       minute: "2-digit"
     });
+
 }
 
 function scrollToBottom() {
+
   messagesBox.scrollTop = messagesBox.scrollHeight;
+
 }
 
 
-/* =================================
-   JOIN ROOM
-================================= */
+/* JOIN ROOM */
 
 async function joinRoom() {
 
@@ -547,13 +620,17 @@ async function joinRoom() {
   const code = roomCodeInput.value.trim();
 
   if (!code) {
+
     showError("Please enter a room code.");
     return;
+
   }
 
   if (!/^[a-zA-Z0-9_-]{1,50}$/.test(code)) {
+
     showError("Use only letters, numbers, - or _.");
     return;
+
   }
 
   isJoining = true;
@@ -584,10 +661,27 @@ async function joinRoom() {
         if (!data) return;
 
         renderMessage(snapshot.key, data);
+
       },
       (error) => {
+
         console.error(error);
+
         alert("Unable to load messages. Check Firebase rules.");
+
+      }
+    );
+
+    unsubscribeRemoved = onChildRemoved(
+      messagesRef,
+      (snapshot) => {
+
+        const element = document.getElementById(
+          "message-" + snapshot.key
+        );
+
+        if (element) element.remove();
+
       }
     );
 
@@ -607,16 +701,17 @@ async function joinRoom() {
     isJoining = false;
 
   }
+
 }
 
 
-/* =================================
-   RENDER MESSAGE
-================================= */
+/* RENDER MESSAGE */
 
 function renderMessage(id, data) {
 
   const message = document.createElement("div");
+
+  message.id = "message-" + id;
 
   message.className =
     "message" + (data.sender === myId ? " me" : "");
@@ -625,7 +720,6 @@ function renderMessage(id, data) {
 
     const text = document.createElement("div");
 
-    // Safe text rendering; prevents HTML injection.
     text.textContent = data.text || "";
 
     message.appendChild(text);
@@ -653,6 +747,7 @@ function renderMessage(id, data) {
   } else {
 
     return;
+
   }
 
   const time = document.createElement("div");
@@ -686,8 +781,6 @@ function renderMessage(id, data) {
           null
         );
 
-        message.remove();
-
       } catch (error) {
 
         console.error(error);
@@ -699,6 +792,7 @@ function renderMessage(id, data) {
     });
 
     actions.appendChild(deleteButton);
+
     message.appendChild(actions);
 
   }
@@ -706,12 +800,36 @@ function renderMessage(id, data) {
   messagesBox.appendChild(message);
 
   scrollToBottom();
+
 }
 
 
-/* =================================
-   SEND MESSAGE
-================================= */
+/* SAVE MESSAGE TO FIREBASE */
+
+async function sendData(payload) {
+
+  if (!currentRoom) {
+
+    throw new Error("No room selected.");
+
+  }
+
+  const messageRef = push(
+    ref(db, "rooms/" + currentRoom + "/messages")
+  );
+
+  await set(messageRef, {
+
+    ...payload,
+    sender: myId,
+    timestamp: Date.now()
+
+  });
+
+}
+
+
+/* SEND TEXT MESSAGE */
 
 async function sendMessage() {
 
@@ -739,35 +857,11 @@ async function sendMessage() {
     messageInput.value = text;
 
   }
-}
-
-
-/* =================================
-   SAVE MESSAGE TO FIREBASE
-================================= */
-
-async function sendData(payload) {
-
-  if (!currentRoom) {
-    throw new Error("No room selected.");
-  }
-
-  const messageRef = push(
-    ref(db, "rooms/" + currentRoom + "/messages")
-  );
-
-  await set(messageRef, {
-    ...payload,
-    sender: myId,
-    timestamp: Date.now()
-  });
 
 }
 
 
-/* =================================
-   IMAGE FILE TO DATA URL
-================================= */
+/* IMAGE FILE TO DATA URL */
 
 function fileToDataURL(file) {
 
@@ -776,6 +870,7 @@ function fileToDataURL(file) {
     const reader = new FileReader();
 
     reader.onload = () => resolve(reader.result);
+
     reader.onerror = () => reject(reader.error);
 
     reader.readAsDataURL(file);
@@ -785,28 +880,28 @@ function fileToDataURL(file) {
 }
 
 
-/* =================================
-   SEND IMAGE
-================================= */
+/* SEND IMAGE FROM GALLERY */
 
 async function sendImage(event) {
 
   const file = event.target.files?.[0];
 
-  // Allow selecting the same image again later.
   event.target.value = "";
 
   if (!file || !currentRoom) return;
 
   if (!file.type.startsWith("image/")) {
+
     alert("Please select an image.");
     return;
+
   }
 
-  // Limit inline image size to reduce database load.
   if (file.size > 300 * 1024) {
+
     alert("Image is too large. Choose an image under 300 KB.");
     return;
+
   }
 
   try {
@@ -829,24 +924,29 @@ async function sendImage(event) {
 }
 
 
-/* =================================
-   CAMERA
-================================= */
+/* OPEN CAMERA */
 
 async function openCamera() {
+
+  if (!currentRoom) return;
 
   try {
 
     if (!navigator.mediaDevices?.getUserMedia) {
+
       alert("Camera requires HTTPS or localhost.");
       return;
+
     }
 
     cameraStream = await navigator.mediaDevices.getUserMedia({
+
       video: {
         facingMode: "environment"
       },
+
       audio: false
+
     });
 
     cameraPreview.srcObject = cameraStream;
@@ -864,17 +964,17 @@ async function openCamera() {
 }
 
 
-/* =================================
-   TAKE PHOTO
-================================= */
+/* TAKE PHOTO */
 
 async function takePhoto() {
 
   if (!cameraStream || !currentRoom) return;
 
   if (!cameraPreview.videoWidth) {
+
     alert("Camera is not ready yet.");
     return;
+
   }
 
   const canvas = document.createElement("canvas");
@@ -904,12 +1004,13 @@ async function takePhoto() {
     canvas.height
   );
 
-  // JPEG compression reduces database usage.
   const data = canvas.toDataURL("image/jpeg", 0.6);
 
   if (data.length > 400000) {
+
     alert("Photo is too large. Please try again.");
     return;
+
   }
 
   try {
@@ -932,9 +1033,7 @@ async function takePhoto() {
 }
 
 
-/* =================================
-   CLOSE CAMERA
-================================= */
+/* CLOSE CAMERA */
 
 function closeCamera() {
 
@@ -955,9 +1054,7 @@ function closeCamera() {
 }
 
 
-/* =================================
-   VOICE RECORDING
-================================= */
+/* VOICE RECORDING */
 
 async function toggleVoice() {
 
@@ -969,6 +1066,7 @@ async function toggleVoice() {
     voiceButton.textContent = "🎙️";
 
     return;
+
   }
 
   if (!navigator.mediaDevices?.getUserMedia ||
@@ -978,6 +1076,8 @@ async function toggleVoice() {
     return;
 
   }
+
+  if (!currentRoom) return;
 
   try {
 
@@ -990,38 +1090,49 @@ async function toggleVoice() {
     let mimeType = "";
 
     if (MediaRecorder.isTypeSupported("audio/webm")) {
+
       mimeType = "audio/webm";
+
     } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+
       mimeType = "audio/mp4";
+
     }
 
     mediaRecorder = mimeType
       ? new MediaRecorder(stream, { mimeType })
       : new MediaRecorder(stream);
 
-    mediaRecorder.ondataavailable = event => {
+    const recorder = mediaRecorder;
+
+    recorder.ondataavailable = event => {
 
       if (event.data && event.data.size > 0) {
+
         audioChunks.push(event.data);
+
       }
 
     };
 
-    mediaRecorder.onstop = async () => {
+    recorder.onstop = async () => {
 
       try {
 
         const audioBlob = new Blob(
           audioChunks,
-          { type: mediaRecorder.mimeType || "audio/webm" }
+          {
+            type: recorder.mimeType || "audio/webm"
+          }
         );
 
-        // Stop microphone immediately.
         stream.getTracks().forEach(track => track.stop());
 
         if (audioBlob.size > 250 * 1024) {
+
           alert("Voice recording is too large. Record a shorter message.");
           return;
+
         }
 
         const reader = new FileReader();
@@ -1029,6 +1140,8 @@ async function toggleVoice() {
         reader.onload = async () => {
 
           try {
+
+            if (!currentRoom) return;
 
             await sendData({
               type: "audio",
@@ -1046,7 +1159,9 @@ async function toggleVoice() {
         };
 
         reader.onerror = () => {
+
           alert("Unable to read voice recording.");
+
         };
 
         reader.readAsDataURL(audioBlob);
@@ -1061,7 +1176,7 @@ async function toggleVoice() {
 
     };
 
-    mediaRecorder.start();
+    recorder.start();
 
     voiceButton.classList.add("recording");
     voiceButton.textContent = "⏹️";
@@ -1077,21 +1192,30 @@ async function toggleVoice() {
 }
 
 
-/* =================================
-   EXIT ROOM
-================================= */
+/* EXIT ROOM */
 
 function leaveRoom() {
 
   if (unsubscribe) {
+
     unsubscribe();
     unsubscribe = null;
+
+  }
+
+  if (unsubscribeRemoved) {
+
+    unsubscribeRemoved();
+    unsubscribeRemoved = null;
+
   }
 
   closeCamera();
 
   if (mediaRecorder && mediaRecorder.state === "recording") {
+
     mediaRecorder.stop();
+
   }
 
   voiceButton.classList.remove("recording");
@@ -1112,9 +1236,7 @@ function leaveRoom() {
 }
 
 
-/* =================================
-   BUTTON EVENTS
-================================= */
+/* BUTTON EVENTS */
 
 document.getElementById("joinButton")
   .addEventListener("click", joinRoom);
@@ -1145,7 +1267,9 @@ gallery.addEventListener("change", sendImage);
 roomCodeInput.addEventListener("keydown", event => {
 
   if (event.key === "Enter") {
+
     joinRoom();
+
   }
 
 });
@@ -1153,15 +1277,24 @@ roomCodeInput.addEventListener("keydown", event => {
 messageInput.addEventListener("keydown", event => {
 
   if (event.key === "Enter") {
+
     sendMessage();
+
   }
 
 });
+
+
+/* CLEANUP */
 
 window.addEventListener("beforeunload", () => {
 
   if (unsubscribe) {
     unsubscribe();
+  }
+
+  if (unsubscribeRemoved) {
+    unsubscribeRemoved();
   }
 
   closeCamera();
