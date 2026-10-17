@@ -82,7 +82,6 @@ button {
   border-radius: 10px;
   font-size: 17px;
   font-weight: bold;
-  transition: 0.2s;
 }
 
 .enter:hover {
@@ -130,10 +129,6 @@ button {
   border-radius: 7px;
 }
 
-.exit:hover {
-  background: #ffd6e8;
-}
-
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -168,11 +163,13 @@ button {
   margin-bottom: 5px;
 }
 
-.message img {
-  max-width: 230px;
+.message img,
+.message video {
+  max-width: 280px;
   width: 100%;
   border-radius: 8px;
   display: block;
+  height: auto;
 }
 
 .message audio {
@@ -193,10 +190,6 @@ button {
   padding: 5px 8px;
   border-radius: 5px;
   font-size: 11px;
-}
-
-.msgActions button:hover {
-  background: #ffd6e8;
 }
 
 .time {
@@ -241,7 +234,6 @@ button {
   background: #ff85bd;
   color: white;
   font-size: 19px;
-  transition: 0.2s;
 }
 
 .iconBtn:hover {
@@ -250,10 +242,6 @@ button {
 
 .send {
   background: #ff1493;
-}
-
-.send:hover {
-  background: #d60076;
 }
 
 .recording {
@@ -271,7 +259,6 @@ button {
   padding: 10px;
   background: #fff0f7;
   text-align: center;
-  border-bottom: 1px solid #ffadd2;
 }
 
 #cameraPreview {
@@ -297,17 +284,12 @@ button {
   color: white;
 }
 
-.cameraButtons button:hover {
-  background: #ff1493;
-}
-
-.messages::-webkit-scrollbar {
-  width: 5px;
-}
-
-.messages::-webkit-scrollbar-thumb {
-  background: #ffadd2;
-  border-radius: 10px;
+#uploadStatus {
+  display: none;
+  padding: 6px 10px;
+  color: #c21868;
+  font-size: 12px;
+  background: #fff0f7;
 }
 
 @media (max-width: 500px) {
@@ -343,111 +325,68 @@ button {
 
 <body>
 
-<!-- HOME PAGE -->
-
 <section id="home">
-
   <div class="logo">INFINITY</div>
-
   <div class="subtitle">PRIVATE CHAT ROOMS</div>
 
   <div class="roomBox">
-
-    <!-- NEW: USER NAME -->
-    <input
-      id="userName"
-      type="text"
+    <input id="userName" type="text"
       placeholder="Enter your name..."
-      autocomplete="off"
-      maxlength="30"
-    >
+      autocomplete="off" maxlength="30">
 
-    <input
-      id="roomCode"
-      type="text"
+    <input id="roomCode" type="text"
       placeholder="Enter room code..."
-      autocomplete="off"
-      maxlength="50"
-    >
+      autocomplete="off" maxlength="50">
 
-    <button class="enter" id="joinButton">
-      JOIN ROOM
-    </button>
-
+    <button class="enter" id="joinButton">JOIN ROOM</button>
   </div>
 
-  <div id="error" role="alert">
-    Please enter your name and room code.
-  </div>
-
+  <div id="error" role="alert"></div>
 </section>
 
-
-<!-- CHAT PAGE -->
 
 <section id="chat">
 
   <header class="header">
-
-    <div class="title">
-      💗 ROOM: <span id="roomName"></span>
-    </div>
-
+    <div class="title">💗 ROOM: <span id="roomName"></span></div>
     <button class="exit" id="exitButton">EXIT</button>
-
   </header>
 
   <div id="cameraBox">
-
     <video id="cameraPreview" autoplay playsinline></video>
 
     <div class="cameraButtons">
-
-      <button id="takePhotoButton">
-        𓂃 ࣪˖ ִֶָ📸་༘࿐ Take Photo
-      </button>
-
+      <button id="takePhotoButton">📸 Take Photo</button>
       <button id="closeCameraButton">✖ Close</button>
-
     </div>
-
   </div>
 
   <main class="messages" id="messages"></main>
 
-  <div class="inputArea">
+  <div id="uploadStatus" role="status"></div>
 
+  <div class="inputArea">
     <div class="inputRow">
 
-      <button class="iconBtn" id="cameraButton" title="Open camera">
-        📸་༘࿐
-      </button>
+      <button class="iconBtn" id="cameraButton" title="Open camera">📸</button>
 
       <input id="gallery" type="file" accept="image/*" hidden>
 
-      <button class="iconBtn" id="galleryButton" title="Choose image">
-        🖼️
-      </button>
+      <button class="iconBtn" id="galleryButton" title="Choose image">🖼️</button>
 
-      <button id="voiceButton" class="iconBtn" title="Record voice">
-        ミ🎤彡
-      </button>
+      <input id="videoGallery" type="file" accept="video/*" hidden>
 
-      <input
-        id="messageInput"
-        class="textInput"
-        type="text"
-        placeholder="Type message..."
-        autocomplete="off"
-        maxlength="2000"
-      >
+      <button class="iconBtn" id="videoButton" title="Send video">🎥</button>
 
-      <button class="iconBtn send" id="sendButton" title="Send message">
-        ➤
-      </button>
+      <button id="voiceButton" class="iconBtn" title="Record voice">🎤</button>
+
+      <input id="messageInput" class="textInput"
+        type="text" placeholder="Type message..."
+        autocomplete="off" maxlength="2000">
+
+      <button class="iconBtn send" id="sendButton" title="Send message">➤</button>
 
     </div>
-
   </div>
 
 </section>
@@ -470,6 +409,13 @@ import {
   limitToLast
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-storage.js";
+
 
 /* FIREBASE CONFIG */
 
@@ -488,6 +434,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 
 /* ELEMENTS */
@@ -500,49 +447,33 @@ const errorBox = document.getElementById("error");
 const roomName = document.getElementById("roomName");
 const messagesBox = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
-
 const gallery = document.getElementById("gallery");
+const videoGallery = document.getElementById("videoGallery");
 const cameraBox = document.getElementById("cameraBox");
 const cameraPreview = document.getElementById("cameraPreview");
 const voiceButton = document.getElementById("voiceButton");
+const uploadStatus = document.getElementById("uploadStatus");
 
 
 /* STATE */
 
 let currentRoom = "";
 let currentUserName = "";
-let messagesRef = null;
+let myId = localStorage.getItem("infinityDeviceId");
+
+if (!myId) {
+  myId = crypto.randomUUID();
+  localStorage.setItem("infinityDeviceId", myId);
+}
+
 let unsubscribe = null;
 let unsubscribeRemoved = null;
-
 let cameraStream = null;
 let mediaRecorder = null;
 let audioChunks = [];
-
 let isJoining = false;
 
-
-/* DEVICE ID */
-
-function getDeviceId() {
-
-  let id = localStorage.getItem("infinityDeviceId");
-
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("infinityDeviceId", id);
-  }
-
-  return id;
-}
-
-const myId = getDeviceId();
-
-
-/* LOAD SAVED NAME */
-
-userNameInput.value =
-  localStorage.getItem("infinityUserName") || "";
+userNameInput.value = localStorage.getItem("infinityUserName") || "";
 
 
 /* HELPERS */
@@ -556,12 +487,16 @@ function hideError() {
   errorBox.style.display = "none";
 }
 
+function setUploadStatus(message) {
+  uploadStatus.textContent = message;
+  uploadStatus.style.display = message ? "block" : "none";
+}
+
 function formatTime(timestamp) {
-  return new Date(timestamp || Date.now())
-    .toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+  return new Date(timestamp || Date.now()).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
 function scrollToBottom() {
@@ -572,7 +507,6 @@ function scrollToBottom() {
 /* JOIN ROOM */
 
 async function joinRoom() {
-
   if (isJoining) return;
 
   const name = userNameInput.value.trim();
@@ -586,18 +520,11 @@ async function joinRoom() {
 
   if (!/^[a-zA-Z0-9 _-]{1,30}$/.test(name)) {
     showError("Name can contain letters, numbers, spaces, - and _.");
-    userNameInput.focus();
-    return;
-  }
-
-  if (!code) {
-    showError("Please enter a room code.");
-    roomCodeInput.focus();
     return;
   }
 
   if (!/^[a-zA-Z0-9_-]{1,50}$/.test(code)) {
-    showError("Use only letters, numbers, - or _ in the room code.");
+    showError("Enter a valid room code using letters, numbers, - or _.");
     return;
   }
 
@@ -605,192 +532,145 @@ async function joinRoom() {
   hideError();
 
   try {
-
     currentUserName = name;
-    localStorage.setItem("infinityUserName", name);
-
     currentRoom = code;
 
-    messagesRef = query(
+    localStorage.setItem("infinityUserName", name);
+
+    const messagesQuery = query(
       ref(db, "rooms/" + currentRoom + "/messages"),
       limitToLast(100)
     );
 
     roomName.textContent = currentRoom;
-
     messagesBox.replaceChildren();
 
     home.style.display = "none";
     chat.style.display = "flex";
 
-    unsubscribe = onChildAdded(
-      messagesRef,
-      (snapshot) => {
+    unsubscribe = onChildAdded(messagesQuery, snapshot => {
+      const data = snapshot.val();
+      if (data) renderMessage(snapshot.key, data);
+    }, error => {
+      console.error(error);
+      alert("Unable to load messages. Check Firebase Database Rules.");
+    });
 
-        const data = snapshot.val();
-
-        if (!data) return;
-
-        renderMessage(snapshot.key, data);
-
-      },
-      (error) => {
-
-        console.error(error);
-        alert("Unable to load messages. Check Firebase rules.");
-
-      }
-    );
-
-    unsubscribeRemoved = onChildRemoved(
-      messagesRef,
-      (snapshot) => {
-
-        const element = document.getElementById(
-          "message-" + snapshot.key
-        );
-
-        if (element) element.remove();
-
-      }
-    );
+    unsubscribeRemoved = onChildRemoved(messagesQuery, snapshot => {
+      const element = document.getElementById("message-" + snapshot.key);
+      if (element) element.remove();
+    });
 
     messageInput.focus();
 
   } catch (error) {
-
     console.error(error);
-
-    showError("Unable to join room. Check Firebase settings.");
-
     currentRoom = "";
-    messagesRef = null;
-
+    showError("Unable to join room. Check Firebase settings.");
   } finally {
-
     isJoining = false;
-
   }
-
 }
 
 
 /* RENDER MESSAGE */
 
 function renderMessage(id, data) {
-
   const message = document.createElement("div");
 
   message.id = "message-" + id;
-
-  message.className =
-    "message" + (data.sender === myId ? " me" : "");
-
-  /* DISPLAY SENDER NAME */
+  message.className = "message" + (data.sender === myId ? " me" : "");
 
   const name = document.createElement("div");
-
   name.className = "senderName";
-
-  name.textContent =
-    data.sender === myId
-      ? "You"
-      : (data.senderName || "Guest");
+  name.textContent = data.sender === myId ? "You" : (data.senderName || "Guest");
 
   message.appendChild(name);
 
-
   if (data.type === "text") {
-
     const text = document.createElement("div");
-
     text.textContent = data.text || "";
-
     message.appendChild(text);
 
   } else if (data.type === "image") {
-
     const img = document.createElement("img");
 
-    img.src = data.data;
     img.alt = "Shared image";
     img.loading = "lazy";
+    img.src = data.data;
+
+    img.onerror = () => {
+      img.alt = "Image failed to load";
+      console.error("Image loading failed:", id);
+    };
 
     message.appendChild(img);
 
-  } else if (data.type === "audio") {
+  } else if (data.type === "video") {
+    const video = document.createElement("video");
 
+    video.controls = true;
+    video.preload = "metadata";
+    video.playsInline = true;
+    video.src = data.data;
+
+    video.onerror = () => {
+      console.error("Video loading failed:", id);
+    };
+
+    message.appendChild(video);
+
+  } else if (data.type === "audio") {
     const audio = document.createElement("audio");
 
     audio.controls = true;
-    audio.src = data.data;
     audio.preload = "metadata";
+    audio.src = data.data;
 
     message.appendChild(audio);
 
   } else {
-
     return;
-
   }
 
-
   const time = document.createElement("div");
-
   time.className = "time";
   time.textContent = formatTime(data.timestamp);
-
   message.appendChild(time);
 
-
-  /* DELETE OWN MESSAGE */
-
   if (data.sender === myId) {
-
     const actions = document.createElement("div");
-
     actions.className = "msgActions";
 
     const deleteButton = document.createElement("button");
-
     deleteButton.textContent = "Delete";
 
     deleteButton.addEventListener("click", async () => {
-
       if (!confirm("Delete this message?")) return;
 
       try {
-
         await set(
           ref(db, "rooms/" + currentRoom + "/messages/" + id),
           null
         );
-
       } catch (error) {
-
         console.error(error);
-        alert("Delete failed. Check Firebase rules.");
-
+        alert("Delete failed. Check Firebase Database Rules.");
       }
-
     });
 
     actions.appendChild(deleteButton);
     message.appendChild(actions);
-
   }
 
   messagesBox.appendChild(message);
-
   scrollToBottom();
-
 }
 
 
-/* SAVE MESSAGE TO FIREBASE */
+/* SEND DATA TO DATABASE */
 
 async function sendData(payload) {
-
   if (!currentRoom) {
     throw new Error("No room selected.");
   }
@@ -800,77 +680,55 @@ async function sendData(payload) {
   );
 
   await set(messageRef, {
-
     ...payload,
-
     sender: myId,
-
     senderName: currentUserName || "Guest",
-
     timestamp: Date.now()
-
   });
-
 }
 
 
-/* SEND TEXT MESSAGE */
+/* SEND TEXT */
 
 async function sendMessage() {
-
   if (!currentRoom) return;
 
   const text = messageInput.value.trim();
-
   if (!text) return;
 
   messageInput.value = "";
 
   try {
-
     await sendData({
       type: "text",
-      text: text
+      text
     });
-
   } catch (error) {
-
     console.error(error);
-
-    alert("Message send failed. Check Firebase rules.");
-
+    alert("Message send failed. Check Firebase Database Rules.");
     messageInput.value = text;
-
   }
-
 }
 
 
-/* IMAGE FILE TO DATA URL */
+/* IMAGE HELPERS */
 
 function fileToDataURL(file) {
-
   return new Promise((resolve, reject) => {
-
     const reader = new FileReader();
 
     reader.onload = () => resolve(reader.result);
-
-    reader.onerror = () => reject(reader.error);
+    reader.onerror = () => reject(new Error("Unable to read file."));
 
     reader.readAsDataURL(file);
-
   });
-
 }
 
 
-/* SEND IMAGE FROM GALLERY */
+/* SEND IMAGE */
 
 async function sendImage(event) {
-
   const file = event.target.files?.[0];
-
   event.target.value = "";
 
   if (!file || !currentRoom) return;
@@ -880,68 +738,120 @@ async function sendImage(event) {
     return;
   }
 
-  if (file.size > 300 * 1024) {
-    alert("Image is too large. Choose an image under 300 KB.");
+  if (file.size > 1024 * 1024) {
+    alert("Image must be under 1 MB.");
     return;
   }
 
-  try {
+  setUploadStatus("Sending image...");
 
+  try {
     const data = await fileToDataURL(file);
 
     await sendData({
       type: "image",
-      data: data
+      data
     });
 
   } catch (error) {
+    console.error("IMAGE SEND ERROR:", error);
+    alert("Image send failed: " + error.message);
+  } finally {
+    setUploadStatus("");
+  }
+}
 
-    console.error(error);
-    alert("Image send failed.");
 
+/* SEND VIDEO USING FIREBASE STORAGE */
+
+async function sendVideo(event) {
+  const file = event.target.files?.[0];
+  event.target.value = "";
+
+  if (!file || !currentRoom) return;
+
+  if (!file.type.startsWith("video/")) {
+    alert("Please select a valid video.");
+    return;
   }
 
+  /* VIDEO LIMIT: 20 MB */
+
+  if (file.size > 20 * 1024 * 1024) {
+    alert("Video is too large. Choose a video under 20 MB.");
+    return;
+  }
+
+  const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const path =
+    "chatMedia/" +
+    currentRoom +
+    "/" +
+    crypto.randomUUID() +
+    "_" +
+    safeFileName;
+
+  setUploadStatus("Uploading video... Please wait.");
+
+  try {
+    const videoRef = storageRef(storage, path);
+
+    await uploadBytes(videoRef, file, {
+      contentType: file.type
+    });
+
+    const downloadURL = await getDownloadURL(videoRef);
+
+    await sendData({
+      type: "video",
+      data: downloadURL,
+      fileName: safeFileName,
+      storagePath: path
+    });
+
+  } catch (error) {
+    console.error("VIDEO UPLOAD ERROR:", error);
+
+    alert(
+      "Video upload failed. Check Firebase Storage setup and Storage Rules. " +
+      (error.message || "")
+    );
+  } finally {
+    setUploadStatus("");
+  }
 }
 
 
 /* OPEN CAMERA */
 
 async function openCamera() {
-
   if (!currentRoom) return;
 
   try {
-
     if (!navigator.mediaDevices?.getUserMedia) {
       alert("Camera requires HTTPS or localhost.");
       return;
     }
 
     cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "environment"
-      },
+      video: { facingMode: "environment" },
       audio: false
     });
 
     cameraPreview.srcObject = cameraStream;
-
     cameraBox.style.display = "block";
 
   } catch (error) {
-
     console.error(error);
     alert("Unable to open camera. Check camera permission.");
-
   }
-
 }
 
 
 /* TAKE PHOTO */
 
 async function takePhoto() {
-
   if (!cameraStream || !currentRoom) return;
 
   if (!cameraPreview.videoWidth) {
@@ -950,18 +860,17 @@ async function takePhoto() {
   }
 
   const canvas = document.createElement("canvas");
-
-  const maxWidth = 800;
-
-  const scale = Math.min(
-    1,
-    maxWidth / cameraPreview.videoWidth
-  );
+  const scale = Math.min(1, 800 / cameraPreview.videoWidth);
 
   canvas.width = Math.round(cameraPreview.videoWidth * scale);
   canvas.height = Math.round(cameraPreview.videoHeight * scale);
 
   const context = canvas.getContext("2d");
+
+  if (!context) {
+    alert("Unable to capture photo.");
+    return;
+  }
 
   context.drawImage(
     cameraPreview,
@@ -979,71 +888,57 @@ async function takePhoto() {
   }
 
   try {
-
     await sendData({
       type: "image",
-      data: data
+      data
     });
 
     closeCamera();
 
   } catch (error) {
-
     console.error(error);
-    alert("Photo send failed.");
-
+    alert("Photo send failed. Check Firebase Database Rules.");
   }
-
 }
 
 
 /* CLOSE CAMERA */
 
 function closeCamera() {
-
   if (cameraStream) {
-
     cameraStream.getTracks().forEach(track => track.stop());
-
     cameraStream = null;
-
   }
 
   cameraPreview.srcObject = null;
-
   cameraBox.style.display = "none";
-
 }
 
 
 /* VOICE RECORDING */
 
 async function toggleVoice() {
-
   if (mediaRecorder && mediaRecorder.state === "recording") {
-
     mediaRecorder.stop();
 
     voiceButton.classList.remove("recording");
-    voiceButton.textContent = "ミ🎤彡";
+    voiceButton.textContent = "🎤";
 
     return;
-
   }
 
   if (!navigator.mediaDevices?.getUserMedia ||
       typeof MediaRecorder === "undefined") {
-
     alert("Voice recording is not supported in this browser.");
     return;
-
   }
 
   if (!currentRoom) return;
 
-  try {
+  let stream;
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
       audio: true
     });
 
@@ -1064,17 +959,13 @@ async function toggleVoice() {
     const recorder = mediaRecorder;
 
     recorder.ondataavailable = event => {
-
       if (event.data && event.data.size > 0) {
         audioChunks.push(event.data);
       }
-
     };
 
     recorder.onstop = async () => {
-
       try {
-
         const audioBlob = new Blob(audioChunks, {
           type: recorder.mimeType || "audio/webm"
         });
@@ -1089,9 +980,7 @@ async function toggleVoice() {
         const reader = new FileReader();
 
         reader.onload = async () => {
-
           try {
-
             if (!currentRoom) return;
 
             await sendData({
@@ -1100,12 +989,9 @@ async function toggleVoice() {
             });
 
           } catch (error) {
-
             console.error(error);
             alert("Voice message send failed.");
-
           }
-
         };
 
         reader.onerror = () => {
@@ -1115,12 +1001,9 @@ async function toggleVoice() {
         reader.readAsDataURL(audioBlob);
 
       } catch (error) {
-
         console.error(error);
         alert("Voice recording failed.");
-
       }
-
     };
 
     recorder.start();
@@ -1129,19 +1012,19 @@ async function toggleVoice() {
     voiceButton.textContent = "⏹️";
 
   } catch (error) {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
 
     console.error(error);
     alert("Microphone permission is required.");
-
   }
-
 }
 
 
 /* EXIT ROOM */
 
 function leaveRoom() {
-
   if (unsubscribe) {
     unsubscribe();
     unsubscribe = null;
@@ -1159,24 +1042,21 @@ function leaveRoom() {
   }
 
   voiceButton.classList.remove("recording");
-  voiceButton.textContent = "ミ🎤彡";
+  voiceButton.textContent = "🎤";
 
   currentRoom = "";
-  messagesRef = null;
-
   messagesBox.replaceChildren();
 
   chat.style.display = "none";
   home.style.display = "flex";
 
-  /* KEEP THE SAVED NAME */
   userNameInput.value =
     localStorage.getItem("infinityUserName") || currentUserName;
 
   roomCodeInput.value = "";
 
+  setUploadStatus("");
   hideError();
-
 }
 
 
@@ -1197,6 +1077,9 @@ document.getElementById("cameraButton")
 document.getElementById("galleryButton")
   .addEventListener("click", () => gallery.click());
 
+document.getElementById("videoButton")
+  .addEventListener("click", () => videoGallery.click());
+
 document.getElementById("takePhotoButton")
   .addEventListener("click", takePhoto);
 
@@ -1207,36 +1090,27 @@ document.getElementById("voiceButton")
   .addEventListener("click", toggleVoice);
 
 gallery.addEventListener("change", sendImage);
+videoGallery.addEventListener("change", sendVideo);
 
 roomCodeInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    joinRoom();
-  }
+  if (event.key === "Enter") joinRoom();
 });
 
 userNameInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    roomCodeInput.focus();
-  }
+  if (event.key === "Enter") roomCodeInput.focus();
 });
 
 messageInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    sendMessage();
-  }
+  if (event.key === "Enter") sendMessage();
 });
 
 
 /* CLEANUP */
 
 window.addEventListener("beforeunload", () => {
-
   if (unsubscribe) unsubscribe();
-
   if (unsubscribeRemoved) unsubscribeRemoved();
-
   closeCamera();
-
 });
 
 </script>
