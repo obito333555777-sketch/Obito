@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKHIL CHAT</title>
+<title>INFINITY CHAT</title>
 
 <style>
 * {
@@ -23,8 +23,6 @@ button {
   cursor: pointer;
 }
 
-/* HOME */
-
 #home {
   min-height: 100vh;
   display: flex;
@@ -32,12 +30,7 @@ button {
   justify-content: center;
   align-items: center;
   padding: 25px;
-  background: radial-gradient(
-    circle,
-    #ffc1dc,
-    #ffe6f1 45%,
-    #ffffff 85%
-  );
+  background: radial-gradient(circle, #ffc1dc, #ffe6f1 45%, #ffffff 85%);
 }
 
 .logo {
@@ -65,7 +58,7 @@ button {
 .roomBox input {
   width: 100%;
   padding: 16px;
-  background: #ffffff;
+  background: #fff;
   color: #333;
   border: 1px solid #ff8fc4;
   border-radius: 10px;
@@ -103,8 +96,6 @@ button {
   text-align: center;
 }
 
-/* CHAT */
-
 #chat {
   display: none;
   height: 100vh;
@@ -132,7 +123,7 @@ button {
 
 .exit {
   flex-shrink: 0;
-  background: #ffffff;
+  background: #fff;
   color: #e60073;
   border: 1px solid #ff8fc4;
   padding: 8px 12px;
@@ -152,7 +143,7 @@ button {
 
 .message {
   max-width: 85%;
-  background: #ffffff;
+  background: #fff;
   color: #333;
   border-left: 3px solid #ff69b4;
   padding: 10px;
@@ -168,6 +159,13 @@ button {
   color: #4a1830;
   border-left: 0;
   border-right: 3px solid #ff1493;
+}
+
+.senderName {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ff1493;
+  margin-bottom: 5px;
 }
 
 .message img {
@@ -207,8 +205,6 @@ button {
   margin-top: 5px;
 }
 
-/* INPUT AREA */
-
 .inputArea {
   padding: 10px;
   background: #ffe0ed;
@@ -227,7 +223,7 @@ button {
   padding: 13px;
   border-radius: 9px;
   border: 1px solid #ffadd2;
-  background: #ffffff;
+  background: #fff;
   color: #333;
   outline: none;
 }
@@ -266,15 +262,9 @@ button {
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
-
-/* CAMERA */
 
 #cameraBox {
   display: none;
@@ -311,8 +301,6 @@ button {
   background: #ff1493;
 }
 
-/* SCROLLBAR */
-
 .messages::-webkit-scrollbar {
   width: 5px;
 }
@@ -321,8 +309,6 @@ button {
   background: #ffadd2;
   border-radius: 10px;
 }
-
-/* MOBILE */
 
 @media (max-width: 500px) {
   .logo {
@@ -367,6 +353,15 @@ button {
 
   <div class="roomBox">
 
+    <!-- NEW: USER NAME -->
+    <input
+      id="userName"
+      type="text"
+      placeholder="Enter your name..."
+      autocomplete="off"
+      maxlength="30"
+    >
+
     <input
       id="roomCode"
       type="text"
@@ -382,7 +377,7 @@ button {
   </div>
 
   <div id="error" role="alert">
-    Please enter a room code.
+    Please enter your name and room code.
   </div>
 
 </section>
@@ -398,22 +393,13 @@ button {
       💗 ROOM: <span id="roomName"></span>
     </div>
 
-    <button class="exit" id="exitButton">
-      EXIT
-    </button>
+    <button class="exit" id="exitButton">EXIT</button>
 
   </header>
 
-
-  <!-- CAMERA -->
-
   <div id="cameraBox">
 
-    <video
-      id="cameraPreview"
-      autoplay
-      playsinline>
-    </video>
+    <video id="cameraPreview" autoplay playsinline></video>
 
     <div class="cameraButtons">
 
@@ -421,51 +407,29 @@ button {
         𓂃 ࣪˖ ִֶָ📸་༘࿐ Take Photo
       </button>
 
-      <button id="closeCameraButton">
-        ✖ Close
-      </button>
+      <button id="closeCameraButton">✖ Close</button>
 
     </div>
 
   </div>
 
-
-  <!-- MESSAGES -->
-
   <main class="messages" id="messages"></main>
-
-
-  <!-- INPUT AREA -->
 
   <div class="inputArea">
 
     <div class="inputRow">
 
-      <button
-        class="iconBtn"
-        id="cameraButton"
-        title="Open camera">
+      <button class="iconBtn" id="cameraButton" title="Open camera">
         📸་༘࿐
       </button>
 
-      <input
-        id="gallery"
-        type="file"
-        accept="image/*"
-        hidden
-      >
+      <input id="gallery" type="file" accept="image/*" hidden>
 
-      <button
-        class="iconBtn"
-        id="galleryButton"
-        title="Choose image">
+      <button class="iconBtn" id="galleryButton" title="Choose image">
         🖼️
       </button>
 
-      <button
-        id="voiceButton"
-        class="iconBtn"
-        title="Record voice">
+      <button id="voiceButton" class="iconBtn" title="Record voice">
         ミ🎤彡
       </button>
 
@@ -478,10 +442,7 @@ button {
         maxlength="2000"
       >
 
-      <button
-        class="iconBtn send"
-        id="sendButton"
-        title="Send message">
+      <button class="iconBtn send" id="sendButton" title="Send message">
         ➤
       </button>
 
@@ -533,6 +494,7 @@ const db = getDatabase(app);
 
 const home = document.getElementById("home");
 const chat = document.getElementById("chat");
+const userNameInput = document.getElementById("userName");
 const roomCodeInput = document.getElementById("roomCode");
 const errorBox = document.getElementById("error");
 const roomName = document.getElementById("roomName");
@@ -548,6 +510,7 @@ const voiceButton = document.getElementById("voiceButton");
 /* STATE */
 
 let currentRoom = "";
+let currentUserName = "";
 let messagesRef = null;
 let unsubscribe = null;
 let unsubscribeRemoved = null;
@@ -563,14 +526,11 @@ let isJoining = false;
 
 function getDeviceId() {
 
-  let id = localStorage.getItem("akatsukiDeviceId");
+  let id = localStorage.getItem("infinityDeviceId");
 
   if (!id) {
-
     id = crypto.randomUUID();
-
-    localStorage.setItem("akatsukiDeviceId", id);
-
+    localStorage.setItem("infinityDeviceId", id);
   }
 
   return id;
@@ -579,35 +539,33 @@ function getDeviceId() {
 const myId = getDeviceId();
 
 
+/* LOAD SAVED NAME */
+
+userNameInput.value =
+  localStorage.getItem("infinityUserName") || "";
+
+
 /* HELPERS */
 
 function showError(message) {
-
   errorBox.textContent = message;
   errorBox.style.display = "block";
-
 }
 
 function hideError() {
-
   errorBox.style.display = "none";
-
 }
 
 function formatTime(timestamp) {
-
   return new Date(timestamp || Date.now())
     .toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
     });
-
 }
 
 function scrollToBottom() {
-
   messagesBox.scrollTop = messagesBox.scrollHeight;
-
 }
 
 
@@ -617,26 +575,39 @@ async function joinRoom() {
 
   if (isJoining) return;
 
+  const name = userNameInput.value.trim();
   const code = roomCodeInput.value.trim();
 
-  if (!code) {
-
-    showError("Please enter a room code.");
+  if (!name) {
+    showError("Please enter your name.");
+    userNameInput.focus();
     return;
+  }
 
+  if (!/^[a-zA-Z0-9 _-]{1,30}$/.test(name)) {
+    showError("Name can contain letters, numbers, spaces, - and _.");
+    userNameInput.focus();
+    return;
+  }
+
+  if (!code) {
+    showError("Please enter a room code.");
+    roomCodeInput.focus();
+    return;
   }
 
   if (!/^[a-zA-Z0-9_-]{1,50}$/.test(code)) {
-
-    showError("Use only letters, numbers, - or _.");
+    showError("Use only letters, numbers, - or _ in the room code.");
     return;
-
   }
 
   isJoining = true;
   hideError();
 
   try {
+
+    currentUserName = name;
+    localStorage.setItem("infinityUserName", name);
 
     currentRoom = code;
 
@@ -666,7 +637,6 @@ async function joinRoom() {
       (error) => {
 
         console.error(error);
-
         alert("Unable to load messages. Check Firebase rules.");
 
       }
@@ -716,6 +686,20 @@ function renderMessage(id, data) {
   message.className =
     "message" + (data.sender === myId ? " me" : "");
 
+  /* DISPLAY SENDER NAME */
+
+  const name = document.createElement("div");
+
+  name.className = "senderName";
+
+  name.textContent =
+    data.sender === myId
+      ? "You"
+      : (data.senderName || "Guest");
+
+  message.appendChild(name);
+
+
   if (data.type === "text") {
 
     const text = document.createElement("div");
@@ -749,6 +733,7 @@ function renderMessage(id, data) {
     return;
 
   }
+
 
   const time = document.createElement("div");
 
@@ -784,7 +769,6 @@ function renderMessage(id, data) {
       } catch (error) {
 
         console.error(error);
-
         alert("Delete failed. Check Firebase rules.");
 
       }
@@ -792,7 +776,6 @@ function renderMessage(id, data) {
     });
 
     actions.appendChild(deleteButton);
-
     message.appendChild(actions);
 
   }
@@ -809,9 +792,7 @@ function renderMessage(id, data) {
 async function sendData(payload) {
 
   if (!currentRoom) {
-
     throw new Error("No room selected.");
-
   }
 
   const messageRef = push(
@@ -821,7 +802,11 @@ async function sendData(payload) {
   await set(messageRef, {
 
     ...payload,
+
     sender: myId,
+
+    senderName: currentUserName || "Guest",
+
     timestamp: Date.now()
 
   });
@@ -891,17 +876,13 @@ async function sendImage(event) {
   if (!file || !currentRoom) return;
 
   if (!file.type.startsWith("image/")) {
-
     alert("Please select an image.");
     return;
-
   }
 
   if (file.size > 300 * 1024) {
-
     alert("Image is too large. Choose an image under 300 KB.");
     return;
-
   }
 
   try {
@@ -916,7 +897,6 @@ async function sendImage(event) {
   } catch (error) {
 
     console.error(error);
-
     alert("Image send failed.");
 
   }
@@ -933,20 +913,15 @@ async function openCamera() {
   try {
 
     if (!navigator.mediaDevices?.getUserMedia) {
-
       alert("Camera requires HTTPS or localhost.");
       return;
-
     }
 
     cameraStream = await navigator.mediaDevices.getUserMedia({
-
       video: {
         facingMode: "environment"
       },
-
       audio: false
-
     });
 
     cameraPreview.srcObject = cameraStream;
@@ -956,7 +931,6 @@ async function openCamera() {
   } catch (error) {
 
     console.error(error);
-
     alert("Unable to open camera. Check camera permission.");
 
   }
@@ -971,10 +945,8 @@ async function takePhoto() {
   if (!cameraStream || !currentRoom) return;
 
   if (!cameraPreview.videoWidth) {
-
     alert("Camera is not ready yet.");
     return;
-
   }
 
   const canvas = document.createElement("canvas");
@@ -986,13 +958,8 @@ async function takePhoto() {
     maxWidth / cameraPreview.videoWidth
   );
 
-  canvas.width = Math.round(
-    cameraPreview.videoWidth * scale
-  );
-
-  canvas.height = Math.round(
-    cameraPreview.videoHeight * scale
-  );
+  canvas.width = Math.round(cameraPreview.videoWidth * scale);
+  canvas.height = Math.round(cameraPreview.videoHeight * scale);
 
   const context = canvas.getContext("2d");
 
@@ -1007,10 +974,8 @@ async function takePhoto() {
   const data = canvas.toDataURL("image/jpeg", 0.6);
 
   if (data.length > 400000) {
-
     alert("Photo is too large. Please try again.");
     return;
-
   }
 
   try {
@@ -1025,7 +990,6 @@ async function takePhoto() {
   } catch (error) {
 
     console.error(error);
-
     alert("Photo send failed.");
 
   }
@@ -1039,9 +1003,7 @@ function closeCamera() {
 
   if (cameraStream) {
 
-    cameraStream.getTracks().forEach(track => {
-      track.stop();
-    });
+    cameraStream.getTracks().forEach(track => track.stop());
 
     cameraStream = null;
 
@@ -1063,7 +1025,7 @@ async function toggleVoice() {
     mediaRecorder.stop();
 
     voiceButton.classList.remove("recording");
-    voiceButton.textContent = "🎙️";
+    voiceButton.textContent = "ミ🎤彡";
 
     return;
 
@@ -1090,13 +1052,9 @@ async function toggleVoice() {
     let mimeType = "";
 
     if (MediaRecorder.isTypeSupported("audio/webm")) {
-
       mimeType = "audio/webm";
-
     } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
-
       mimeType = "audio/mp4";
-
     }
 
     mediaRecorder = mimeType
@@ -1108,9 +1066,7 @@ async function toggleVoice() {
     recorder.ondataavailable = event => {
 
       if (event.data && event.data.size > 0) {
-
         audioChunks.push(event.data);
-
       }
 
     };
@@ -1119,20 +1075,15 @@ async function toggleVoice() {
 
       try {
 
-        const audioBlob = new Blob(
-          audioChunks,
-          {
-            type: recorder.mimeType || "audio/webm"
-          }
-        );
+        const audioBlob = new Blob(audioChunks, {
+          type: recorder.mimeType || "audio/webm"
+        });
 
         stream.getTracks().forEach(track => track.stop());
 
         if (audioBlob.size > 250 * 1024) {
-
           alert("Voice recording is too large. Record a shorter message.");
           return;
-
         }
 
         const reader = new FileReader();
@@ -1151,7 +1102,6 @@ async function toggleVoice() {
           } catch (error) {
 
             console.error(error);
-
             alert("Voice message send failed.");
 
           }
@@ -1159,9 +1109,7 @@ async function toggleVoice() {
         };
 
         reader.onerror = () => {
-
           alert("Unable to read voice recording.");
-
         };
 
         reader.readAsDataURL(audioBlob);
@@ -1169,7 +1117,6 @@ async function toggleVoice() {
       } catch (error) {
 
         console.error(error);
-
         alert("Voice recording failed.");
 
       }
@@ -1184,7 +1131,6 @@ async function toggleVoice() {
   } catch (error) {
 
     console.error(error);
-
     alert("Microphone permission is required.");
 
   }
@@ -1197,29 +1143,23 @@ async function toggleVoice() {
 function leaveRoom() {
 
   if (unsubscribe) {
-
     unsubscribe();
     unsubscribe = null;
-
   }
 
   if (unsubscribeRemoved) {
-
     unsubscribeRemoved();
     unsubscribeRemoved = null;
-
   }
 
   closeCamera();
 
   if (mediaRecorder && mediaRecorder.state === "recording") {
-
     mediaRecorder.stop();
-
   }
 
   voiceButton.classList.remove("recording");
-  voiceButton.textContent = "🎙️";
+  voiceButton.textContent = "ミ🎤彡";
 
   currentRoom = "";
   messagesRef = null;
@@ -1228,6 +1168,10 @@ function leaveRoom() {
 
   chat.style.display = "none";
   home.style.display = "flex";
+
+  /* KEEP THE SAVED NAME */
+  userNameInput.value =
+    localStorage.getItem("infinityUserName") || currentUserName;
 
   roomCodeInput.value = "";
 
@@ -1265,23 +1209,21 @@ document.getElementById("voiceButton")
 gallery.addEventListener("change", sendImage);
 
 roomCodeInput.addEventListener("keydown", event => {
-
   if (event.key === "Enter") {
-
     joinRoom();
-
   }
+});
 
+userNameInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    roomCodeInput.focus();
+  }
 });
 
 messageInput.addEventListener("keydown", event => {
-
   if (event.key === "Enter") {
-
     sendMessage();
-
   }
-
 });
 
 
@@ -1289,13 +1231,9 @@ messageInput.addEventListener("keydown", event => {
 
 window.addEventListener("beforeunload", () => {
 
-  if (unsubscribe) {
-    unsubscribe();
-  }
+  if (unsubscribe) unsubscribe();
 
-  if (unsubscribeRemoved) {
-    unsubscribeRemoved();
-  }
+  if (unsubscribeRemoved) unsubscribeRemoved();
 
   closeCamera();
 
